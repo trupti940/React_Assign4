@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Task Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .task {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+      }
+      .form-group {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+
+      function TaskManager() {
+        const [tasks, setTasks] = React.useState([]);
+        const [newTask, setNewTask] = React.useState({ title: '', isCompleted: false, assignee: '' });
+        const [filter, setFilter] = React.useState('');
+        const [showIncomplete, setShowIncomplete] = React.useState(false);
+
+        const apiUrl = 'http://localhost:5000/todos';
+
+        // Fetch all tasks
+        const fetchTasks = () => {
+          axios.get(apiUrl)
+            .then(response => setTasks(response.data))
+            .catch(error => console.error('Error fetching tasks:', error));
+        };
+
+        // Add a new task
+        const addTask = () => {
+          axios.post(apiUrl, newTask)
+            .then(() => {
+              fetchTasks();
+              setNewTask({ title: '', isCompleted: false, assignee: '' });
+            })
+            .catch(error => console.error('Error adding task:', error));
+        };
+
+        // Update a task
+        const updateTask = (id, updatedTask) => {
+          axios.put(`${apiUrl}/${id}`, updatedTask)
+            .then(() => fetchTasks())
+            .catch(error => console.error('Error updating task:', error));
+        };
+
+        // Delete a task
+        const deleteTask = (id) => {
+          axios.delete(`${apiUrl}/${id}`)
+            .then(() => fetchTasks())
+            .catch(error => console.error('Error deleting task:', error));
+        };
+
+        // Filter tasks by assignee or show incomplete tasks
+        const filteredTasks = tasks.filter(task => {
+          if (showIncomplete && task.isCompleted) return false;
+          if (filter && task.assignee !== filter) return false;
+          return true;
+        });
+
+        React.useEffect(() => {
+          fetchTasks();
+        }, []);
+
+        return (
+          <div>
+            <h1>Task Manager</h1>
+
+            {/* Form to add a new task */}
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Task title"
+                value={newTask.title}
+                onChange={e => setNewTask({ ...newTask, title: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Assignee"
+                value={newTask.assignee}
+                onChange={e => setNewTask({ ...newTask, assignee: e.target.value })}
+              />
+              <button onClick={addTask}>Add Task</button>
+            </div>
+
+            {/* Filter and show tasks */}
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Filter by assignee"
+                value={filter}
+                onChange={e => setFilter(e.target.value)}
+              />
+              <button onClick={() => setShowIncomplete(!showIncomplete)}>
+                {showIncomplete ? 'Show All' : 'Show Incomplete'}
+              </button>
+            </div>
+
+            {/* Task list */}
+            <div>
+              {filteredTasks.map(task => (
+                <div key={task.id} className="task">
+                  <h3>{task.title}</h3>
+                  <p>Assignee: {task.assignee}</p>
+                  <p>Status: {task.isCompleted ? 'Completed' : 'Incomplete'}</p>
+                  <button onClick={() => updateTask(task.id, { ...task, isCompleted: !task.isCompleted })}>
+                    {task.isCompleted ? 'Mark Incomplete' : 'Mark Completed'}
+                  </button>
+                  <button onClick={() => deleteTask(task.id)}>Delete</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<TaskManager />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

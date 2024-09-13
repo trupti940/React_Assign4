@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profiles</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      .profile {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin: 10px 0;
+        border-radius: 8px;
+        background-color: #fff;
+      }
+      .profile h2 {
+        margin: 0 0 10px 0;
+      }
+      .search-input {
+        margin-bottom: 20px;
+        padding: 10px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      function UserProfile({ name, email, location }) {
+        return (
+          <div className="profile">
+            <h2>{name}</h2>
+            <p>Email: {email}</p>
+            <p>Location: {location}</p>
+          </div>
+        );
+      }
+
+      function App() {
+        const [searchQuery, setSearchQuery] = React.useState("");
+        
+        // Simulated user data
+        const users = React.useMemo(() => ([
+          { id: 1, name: "John Doe", email: "john@example.com", location: "New York" },
+          { id: 2, name: "Jane Smith", email: "jane@example.com", location: "California" },
+          { id: 3, name: "Emily Johnson", email: "emily@example.com", location: "Texas" },
+          { id: 4, name: "Michael Brown", email: "michael@example.com", location: "Florida" },
+          { id: 5, name: "Chris Lee", email: "chris@example.com", location: "Washington" },
+        ]), []);
+
+        // Filter the users based on the search query
+        const filteredUsers = React.useMemo(() => {
+          return users.filter(user => 
+            user.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        }, [searchQuery, users]);
+
+        return (
+          <div>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
+            {filteredUsers.map(user => (
+              <UserProfile
+                key={user.id}
+                name={user.name}
+                email={user.email}
+                location={user.location}
+              />
+            ))}
+
+            {filteredUsers.length === 0 && <p>No users found.</p>}
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

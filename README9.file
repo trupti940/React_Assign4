@@ -1,0 +1,22 @@
+# Advanced Task Manager in React
+
+## Description
+This project is an Advanced Task Manager built with React. It features CRUD operations (Create, Read, Update, Delete) using Axios to interact with a JSON server. Users can add new tasks, update existing tasks, delete tasks, filter tasks by completion status, and filter tasks by assignee. This application demonstrates advanced state management, HTTP requests, and conditional rendering in React.
+
+## Features
+- **Add New Task**: Allows users to add tasks with a title, assignee, and completion status.
+- **Update Task**: Users can update a task's details or toggle its completion status.
+- **Delete Task**: Each task has a delete button to remove it from the task list.
+- **Get All Tasks**: Displays all tasks stored in the JSON server.
+- **Show Incomplete Tasks**: Filters and displays only the tasks that are not marked as completed.
+- **Filter by Assignee**: Allows filtering tasks based on the assignee's name.
+
+## Technologies Used
+- **React**: For building the user interface and handling state.
+- **Axios**: For making HTTP requests to the JSON server.
+- **JSON Server**: Simulates a RESTful API to perform CRUD operations.
+- **HTML & CSS**: For structuring and styling the web application.
+
+## Installation & Setup
+
+

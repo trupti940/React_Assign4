@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Application</title>
+</head>
+<style>
+    .weather-app {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    input,
+    button {
+        padding: 10px;
+        margin: 5px;
+    }
+
+    .weather-details,
+    .forecast,
+    .favorites,
+    .geo-weather {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <div id="root"></div>
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const apiKey = "YOUR_OPENWEATHER_API_KEY";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/";
+
+        const WeatherApp = () => {
+            const [city, setCity] = useState("");
+            const [weather, setWeather] = useState(null);
+            const [forecast, setForecast] = useState([]);
+            const [favorites, setFavorites] = useState([]);
+            const [geoWeather, setGeoWeather] = useState(null);
+
+            // Fetch weather by city
+            const fetchWeather = async (city) => {
+                try {
+                    const response = await axios.get(`${apiUrl}weather?q=${city}&appid=${apiKey}&units=metric`);
+                    setWeather(response.data);
+                    fetchForecast(city);
+                } catch (error) {
+                    console.error("Error fetching weather:", error);
+                }
+            };
+
+            // Fetch 5-day forecast
+            const fetchForecast = async (city) => {
+                try {
+                    const response = await axios.get(`${apiUrl}forecast?q=${city}&appid=${apiKey}&units=metric`);
+                    setForecast(response.data.list);
+                } catch (error) {
+                    console.error("Error fetching forecast:", error);
+                }
+            };
+
+            // Handle search input
+            const handleSearch = (e) => {
+                setCity(e.target.value);
+            };
+
+            // Search weather when form is submitted
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                fetchWeather(city);
+            };
+
+            // Add city to favorites
+            const addToFavorites = () => {
+                if (weather && !favorites.includes(weather.name)) {
+                    setFavorites([...favorites, weather.name]);
+                }
+            };
+
+            // Remove city from favorites
+            const removeFromFavorites = (city) => {
+                setFavorites(favorites.filter((fav) => fav !== city));
+            };
+
+            // Fetch geolocation-based weather
+            const fetchGeoWeather = async (lat, lon) => {
+                try {
+                    const response = await axios.get(`${apiUrl}weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`);
+                    setGeoWeather(response.data);
+                } catch (error) {
+                    console.error("Error fetching geolocation weather:", error);
+                }
+            };
+
+            // Get user's geolocation
+            const getGeolocation = () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            fetchGeoWeather(position.coords.latitude, position.coords.longitude);
+                        },
+                        (error) => {
+                            console.error("Geolocation error:", error);
+                        }
+                    );
+                }
+            };
+
+            useEffect(() => {
+                getGeolocation(); // Fetch weather based on user's location at startup
+            }, []);
+
+            return (
+                <div className="weather-app">
+                    <h1>Weather Application</h1>
+
+                    {/* Search Form */}
+                    <form onSubmit={handleSubmit}>
+                        <input type="text" value={city} onChange={handleSearch} placeholder="Search city..." />
+                        <button type="submit">Search</button>
+                    </form>
+
+                    {/* Current Weather */}
+                    {weather && (
+                        <div className="weather-details">
+                            <h2>Current Weather in {weather.name}</h2>
+                            <p>Temperature: {weather.main.temp}°C</p>
+                            <p>Humidity: {weather.main.humidity}%</p>
+                            <p>Wind Speed: {weather.wind.speed} m/s</p>
+                            <p>Weather: {weather.weather[0].description}</p>
+                            <button onClick={addToFavorites}>Add to Favourites</button>
+                        </div>
+                    )}
+
+                    {/* 5-day Forecast */}
+                    {forecast.length > 0 && (
+                        <div className="forecast">
+                            <h2>5-Day Forecast</h2>
+                            <ul>
+                                {forecast.map((item, index) => (
+                                    <li key={index}>
+                                        {new Date(item.dt_txt).toLocaleString()} - Temp: {item.main.temp}°C
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Favourites List */}
+                    {favorites.length > 0 && (
+                        <div className="favorites">
+                            <h2>Favourite Cities</h2>
+                            <ul>
+                                {favorites.map((fav, index) => (
+                                    <li key={index}>
+                                        {fav}
+                                        <button onClick={() => removeFromFavorites(fav)}>Remove</button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Geolocation-based Weather */}
+                    {geoWeather && (
+                        <div className="geo-weather">
+                            <h2>Weather at Your Location</h2>
+                            <p>Location: {geoWeather.name}</p>
+                            <p>Temperature: {geoWeather.main.temp}°C</p>
+                            <p>Weather: {geoWeather.weather[0].description}</p>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<WeatherApp />, document.getElementById("root"));
+
+    </script>
+</body>
+
+</html>

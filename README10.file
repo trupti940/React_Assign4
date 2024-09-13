@@ -1,0 +1,21 @@
+# Weather Application in React
+
+## Description
+This project is a weather application built with React. It fetches weather data from the OpenWeather API and provides users with current weather conditions, a 5-day forecast, weather alerts, and geolocation-based weather data. Users can search for weather by city and manage a favourites list for quick access to multiple cities.
+
+## Features
+- **Search Weather by City**: Search for current weather conditions and a 5-day forecast for any city.
+- **View Current Weather**: Display weather data such as temperature, humidity, wind speed, and a brief weather description.
+- **5-Day Forecast**: Show a forecast for the next 5 days, with temperatures and weather conditions.
+- **Favourites List**: Add cities to a favourites list and display their current weather. Users can also remove cities from this list.
+- **Weather Alerts**: Display weather alerts (if available) for a city.
+- **Geolocation**: Use the user's location to show the weather conditions and forecast for their current city.
+- **Responsive Design**: The app is styled with responsive design to work on various screen sizes.
+
+## Technologies Used
+- **React**: For building the user interface and handling state.
+- **Axios**: For making HTTP requests to the OpenWeather API.
+- **OpenWeather API**: Used to fetch real-time weather data.
+- **HTML & CSS**: For structuring and styling the web application.
+- **Geolocation API**: For getting the user's current location and displaying relevant weather data.
+

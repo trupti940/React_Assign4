@@ -1,0 +1,30 @@
+# Dynamic User Profile Search in React
+
+## Description
+This project is a React application that renders a dynamic list of user profiles and includes a real-time search feature. The user can filter the displayed profiles by typing into the search field. The app demonstrates advanced state management, dynamic data rendering, and search optimization using React hooks like `useState` and `useMemo`.
+
+## Features
+- **Render User Profiles**: Displays a list of user profiles with basic details such as name, email, and location.
+- **Search Functionality**: A search input field filters profiles in real-time based on the user's input.
+- **Performance Optimization**: Utilizes `useMemo` to avoid unnecessary re-renders when updating the search input.
+- **Styled UI**: Basic CSS for a clean and responsive design.
+
+## Technologies Used
+- **React**: Core framework for building user interfaces.
+- **JavaScript (ES6+)**: For logic, state management, and event handling.
+- **HTML & CSS**: For structuring and styling the web app.
+  
+## How It Works
+1. **User Profile Rendering**:
+   - The app initially renders a list of user profiles from static data.
+   - Each profile is displayed in a `UserProfile` component that shows the user's name, email, and location.
+
+2. **Search Functionality**:
+   - A search bar is placed at the top of the page.
+   - As the user types into the search field, the `searchQuery` state is updated, and the list of profiles is filtered accordingly.
+   - The filtered profiles are dynamically rendered using the `map()` function in React.
+
+3. **Performance Optimization**:
+   - The `useMemo` hook is used to memoize the filtered user list to prevent unnecessary re-renders. This ensures the application performs efficiently, even with larger datasets.
+
+

@@ -1,0 +1,16 @@
+# ToDo List Application
+
+## Description
+This project is a simple ToDo List application built with React. It allows users to add, delete, and mark tasks as completed. The application demonstrates advanced state management, conditional rendering, and event handling in React.
+
+## Features
+- **Add ToDo Items**: Users can add new tasks to the list using a form.
+- **Delete ToDo Items**: Each task can be removed from the list using a delete button.
+- **Mark as Completed**: Users can check/uncheck a checkbox to mark tasks as completed, which strikes through the text of the task.
+- **Visual Feedback**: Tasks are visually styled when completed (strikethrough effect).
+
+## Technologies Used
+- **React**: The core library for building the UI.
+- **JavaScript**: To handle logic, state, and event handling.
+- **HTML & CSS**: For structuring and styling the application.
+

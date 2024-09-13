@@ -1,0 +1,10 @@
+# Greeting Cards App
+
+## Description
+This is a simple React app that renders greeting cards dynamically using the `map()` function. It displays greeting messages along with the recipient's name.
+
+## Learnings
+- Understanding how to render lists in React using the `map()` function.
+- Passing data as props to components.
+- Applying basic inline CSS styling to components.
+- React state management was not required in this example but could be useful for more complex functionality.
